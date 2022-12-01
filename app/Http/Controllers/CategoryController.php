@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Category;
+use Yajra\Datatables\Datatables;
+use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
@@ -28,5 +30,19 @@ class CategoryController extends Controller
 
         return "Success";
 
+    }
+
+    public function getAllCategories()
+    {
+        $categories = Category::all();
+        return Datatables::of($categories)
+
+        ->editColumn('created_at', function ($category) {
+                return $category->created_at ? with (new Carbon($category->created_at))->format('d-M-Y'): '';
+        })
+        ->editColumn('updated_at', function ($category) {
+                return $category->created_at ? with (new Carbon($category->updated_at))->format('d-M-Y'): '';
+        })
+        ->make(true);
     }
 }

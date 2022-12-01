@@ -108,7 +108,7 @@
             }
         })
 
-         baseUrl = {!!json_encode(url('/'))!!}
+          var baseUrl = {!!json_encode(url('/'))!!}
        
     </script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
