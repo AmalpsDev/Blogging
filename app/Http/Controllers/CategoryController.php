@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Category;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
+use Response;
 
 class CategoryController extends Controller
 {
@@ -44,5 +45,16 @@ class CategoryController extends Controller
                 return $category->created_at ? with (new Carbon($category->updated_at))->format('d-M-Y'): '';
         })
         ->make(true);
+    }
+
+    public function getCategory($id)
+    {
+        $category = Category::find($id);
+
+        if($category){
+            return $category;
+        }else{
+            return Response::json(['error' => 'Not Found'],404);
+        }
     }
 }

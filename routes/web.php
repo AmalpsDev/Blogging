@@ -59,6 +59,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::post('/addCategory', [CategoryController::class, 'create']);
         Route::post('/getAllCategories',[CategoryController::class, 'getAllCategories']);
+        Route::get('/getCategory/{id}',[CategoryController::class, 'getCategory']);
 
     });
 
