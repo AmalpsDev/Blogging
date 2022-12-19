@@ -84,6 +84,9 @@ $(document).on('click', '.editCategory', function(e) {
         processData: false,
         contentType: false,
         success: function(data) {
+            $('#edit_category').val(data.id);
+            $('#edit_category').val(data.name);
+            $('#editCategoryModal').modal('show');
             console.log(data);
         },
         error: function(data, textStatus, xhr) {
@@ -92,6 +95,32 @@ $(document).on('click', '.editCategory', function(e) {
                 title: 'Not Found',
                 text: 'Sorry we are unable to find this record !',
             })
+        }
+    })
+});
+
+$('#editCategory').submit(function(e) {
+    e.preventDefault();
+    var form = $('#editCategory')[0];
+    var formData = new FormData(form);
+    $.ajax({
+        url: baseUrl + '/updateCategory',
+        type: 'POST',
+        data: formData,
+        processing: false,
+        contentType: false,
+        success: function(data) {
+
+        },
+        error: function(reject) {
+            if (reject.status === 422) {
+                removeErrors();
+                var errors = $.parseJSON(reject.responseText);
+                $.each(errors.errors, function(key, value) {
+                    $('#' + key).addClass('is_invalid');
+                    $('#' + key + "_help").text(value[0]);
+                })
+            }
         }
     })
 });

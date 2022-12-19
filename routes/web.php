@@ -60,6 +60,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::post('/addCategory', [CategoryController::class, 'create']);
         Route::post('/getAllCategories',[CategoryController::class, 'getAllCategories']);
         Route::get('/getCategory/{id}',[CategoryController::class, 'getCategory']);
+        Route::post('/updateCategory' ,[CategoryController::class, 'updateCategory']);
 
     });
 

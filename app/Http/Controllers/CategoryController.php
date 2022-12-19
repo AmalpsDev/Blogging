@@ -57,4 +57,9 @@ class CategoryController extends Controller
             return Response::json(['error' => 'Not Found'],404);
         }
     }
+
+    public function updateCategory(Request $request)
+    {
+        dd($request->all());
+    }
 }
