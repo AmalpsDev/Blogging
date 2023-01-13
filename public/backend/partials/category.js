@@ -39,6 +39,7 @@ $(document).ready(function(event) {
 
         ]
     });
+    //create category
     $('#addCategory').submit(function(event) {
         event.preventDefault();
         var form = $('#addCategory')[0];
@@ -73,69 +74,92 @@ $(document).ready(function(event) {
             }
         });
     });
-});
 
-$(document).on('click', '.editCategory', function(e) {
-    e.preventDefault();
-    var id = $(this).attr('id');
-    $.ajax({
-        url: baseUrl + '/getCategory/' + id,
-        type: 'Get',
-        processData: false,
-        contentType: false,
-        success: function(data) {
-            $('#edit_category').val(data.id);
-            $('#edit_category').val(data.name);
-            $('#editCategoryModal').modal('show');
-            console.log(data);
-        },
-        error: function(data, textStatus, xhr) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Not Found',
-                text: 'Sorry we are unable to find this record !',
-            })
-        }
-    })
-});
+    //Get category for update
 
-$('#editCategory').submit(function(e) {
-    e.preventDefault();
-    var form = $('#editCategory')[0];
-    var formData = new FormData(form);
-    $.ajax({
-        url: baseUrl + '/updateCategory',
-        type: 'POST',
-        data: formData,
-        processing: false,
-        contentType: false,
-        success: function(data) {
+    $(document).on('click', '.editCategory', function(e) {
+        e.preventDefault();
+        var id = $(this).attr('id');
+        $.ajax({
+            url: baseUrl + '/getCategory/' + id,
+            type: 'Get',
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#category_id').val(data.id);
+                $('#edit_category').val(data.id);
+                $('#edit_category').val(data.name);
+                $('#editCategoryModal').modal('show');
 
-        },
-        error: function(reject) {
-            if (reject.status === 422) {
-                removeErrors();
-                var errors = $.parseJSON(reject.responseText);
-                $.each(errors.errors, function(key, value) {
-                    $('#' + key).addClass('is_invalid');
-                    $('#' + key + "_help").text(value[0]);
+            },
+            error: function(data, textStatus, xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Not Found',
+                    text: 'Sorry we are unable to find this record !',
                 })
             }
-        }
+        })
+    });
+
+    $('#editCategory').submit(function(e) {
+        e.preventDefault();
+        var form = $('#editCategory')[0];
+        var formData = new FormData(form);
+        $.ajax({
+            url: baseUrl + '/updateCategory',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#editCategoryModal').modal('hide');
+                onSuccessRemoveEditErrors();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Category Updated Successfully !',
+                });
+                table.ajax.reload();
+            },
+            error: function(reject) {
+                if (reject.status === 422) {
+                    removeErrors();
+                    var errors = $.parseJSON(reject.responseText);
+                    $.each(errors.errors, function(key, value) {
+                        $('#' + key).addClass('is_invalid');
+                        $('#' + key + "_help").text(value[0]);
+                    })
+                }
+            }
+        })
+    });
+
+
+    function onSuccessRemoveEditErrors() {
+        $('#edit_category').removeClass('is-invalid');
+        $('#edit_category').val('');
+        $('#edit_category_help').text('');
+    }
+
+
+    $('#editCategoryModal').on('hidden.bs.modal', function() {
+        onSuccessRemoveEditErrors();
+    })
+
+
+    function onSuccessRemoveErrors() {
+        $('#category_name').removeClass('is-invalid');
+        $('#category_name').val('');
+        $('#category_name_help').text('');
+    }
+
+    function removeErrors() {
+        $('#category_name').removeClass('is-invalid');
+        $('#category_name_help').text('');
+    }
+
+    $('#addCategoryModal').on('hidden.bs.modal', function() {
+        onSuccessRemoveErrors();
     })
 });
-
-function onSuccessRemoveErrors() {
-    $('#category_name').removeClass('is-invalid');
-    $('#category_name').val('');
-    $('#category_name_help').text('');
-}
-
-function removeErrors() {
-    $('#category_name').removeClass('is-invalid');
-    $('#category_name_help').text('');
-}
-
-$('#addCategoryModal').on('hidden.bs.modal', function() {
-    onSuccessRemoveErrors();
-})
