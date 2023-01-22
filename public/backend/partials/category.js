@@ -25,7 +25,7 @@ $(document).ready(function(event) {
         "columnDefs": [{
 
                 "render": function(data, type, row, meta) {
-                    return `<a href="#" class="btn btn-primary btn-sm editCategory" id="${row.id}">Edit</a>`
+                    return `<a href="#" class="btn btn-primary btn-sm editCategory" id="${row.id}"><i class="fas fa-pencil-alt"></i></a>`
                 },
                 "targets": 4
             },
@@ -138,7 +138,41 @@ $(document).ready(function(event) {
     $(document).on('click', '.deleteCategory', function(e) {
         e.preventDefault();
         var id = $(this).attr('id');
-        alert(id);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    url: baseUrl + '/deleteCategory/' + id,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Category Deleted Successfully !',
+                        });
+                        table.ajax.reload();
+
+                    },
+                    error: function(data, textStatus, xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Not Found',
+                            text: 'Sorry we are unable to find this record !',
+                        })
+                    }
+                });
+            }
+        })
     })
 
     function onSuccessRemoveEditErrors() {
