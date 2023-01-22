@@ -134,7 +134,12 @@ $(document).ready(function(event) {
             }
         })
     });
-
+    ///////Delete  CAtegory////////
+    $(document).on('click', '.deleteCategory', function(e) {
+        e.preventDefault();
+        var id = $(this).attr('id');
+        alert(id);
+    })
 
     function onSuccessRemoveEditErrors() {
         $('#edit_category').removeClass('is-invalid');
